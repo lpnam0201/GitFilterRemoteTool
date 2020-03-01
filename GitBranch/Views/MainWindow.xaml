@@ -1,0 +1,73 @@
+﻿<Window x:Class="GitBranch.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid Margin="16" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <DockPanel>
+            <materialDesign:PackIcon VerticalAlignment="Center"
+                                     Margin="4 0 4 0"
+                                     Kind="Git"
+                                     DockPanel.Dock="Left"
+                                     Foreground="{Binding ElementName=SearchTextBox, Path=BorderBrush}"></materialDesign:PackIcon>
+            <TextBox Width="300"
+                     Margin="0 8 0 8"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     HorizontalAlignment="Left"
+                     materialDesign:HintAssist.Hint="Type text to find and press Enter..."
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     Name="SearchTextBox"
+                     DockPanel.Dock="Left">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" 
+                            Command="{Binding SearchCommand}"></KeyBinding>
+                </TextBox.InputBindings>
+            </TextBox>
+            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    HorizontalAlignment="Right"
+                    Command="{Binding OpenConfigCommand}"
+                    DockPanel.Dock="Right">
+                <materialDesign:PackIcon Kind="Settings"
+                                         Width="20"
+                                         Height="20"
+                                         Foreground="White"></materialDesign:PackIcon>
+            </Button>
+        </DockPanel>
+        
+        <TextBlock Grid.Row="1"
+                   Style="{StaticResource MaterialDesignHeadline5TextBlock}">Branches</TextBlock>
+        <ListView Grid.Row="2"
+                  ItemsSource="{Binding Branches}"
+                  SelectedItem="{Binding CurrentBranch}"
+                  HorizontalContentAlignment="Stretch">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" 
+                               HorizontalAlignment="Stretch">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick"
+                                          Command="{Binding CopyCheckoutToClipboardCommand}"></MouseBinding>
+                        </TextBlock.InputBindings>
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Copy checkout link to Clipboard" 
+                                          Command="{Binding CopyCheckoutToClipboardCommand}"></MenuItem>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Window>
